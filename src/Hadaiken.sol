@@ -21,10 +21,14 @@ contract Hadaiken {
     PotAbstract constant internal pot  = PotAbstract(POT);
     VowAbstract constant internal vow  = VowAbstract(VOW);
     VatAbstract constant internal vat  = VatAbstract(VAT);
-    PotHelper   constant internal poth = PotHelper(POT);
+    PotHelper            internal poth;
 
     bytes32 constant internal ETH_A = bytes32("ETH-A");
     bytes32 constant internal BAT_A = bytes32("BAT-A");
+
+    constructor() public {
+        poth = new PotHelper(POT);
+    }
 
     // Raw System Debt
     function _rawSysDebt() internal view returns (uint256) {
