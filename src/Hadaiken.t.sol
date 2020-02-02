@@ -33,7 +33,6 @@ contract HadaikenTest is DSTest {
     PotAbstract constant internal pot  = PotAbstract(POT);
     VowAbstract constant internal vow  = VowAbstract(VOW);
     VatAbstract constant internal vat  = VatAbstract(VAT);
-    PotHelper   constant internal poth = new PotHelper(POT);
 
     function setUp() public {
         hadaiken = new Hadaiken();
@@ -56,6 +55,11 @@ contract HadaikenTest is DSTest {
         assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
         hadaiken.heal();
         assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
+    }
+
+    function testHealStat() public {
+        uint256 debt = (vat.sin(VOW) - vow.Sin() - vow.Ash());
+        assertEq(hadaiken.healStat(), debt);
     }
 
     function testRawSysDebt() public {
