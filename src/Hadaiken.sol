@@ -89,7 +89,7 @@ contract Hadaiken {
         jug.drip(BAT_A);
     }
 
-    function bumppable() public view returns (bool) {
+    function bumppable() external view returns (bool) {
         return _bumppable();
     }
 
@@ -111,7 +111,7 @@ contract Hadaiken {
     }
 
     // Kitchen sink. Call this early and often.
-    function hadaiken() public {
+    function hadaiken() external {
         _dripPot();                               // Update the chi
         _dripIlks();                              // Updates the Ilk rates
         _heal();                                  // Cancel out system debt with system surplus
