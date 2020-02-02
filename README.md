@@ -4,7 +4,7 @@ One-call transaction to perform a bunch of housekeeping in the MakerDAO ecosyste
 
   * Heal system debt and surplus
   * Drip the pot and jugs
-  * Kick off a flop auction if one is ready
+  * Kick off a flap auction if one is ready
 
 ## Usage
 
