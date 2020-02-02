@@ -11,6 +11,9 @@ import { PotAbstract } from "lib/dss-interfaces/src/dss/PotAbstract.sol";
 import { VatAbstract } from "lib/dss-interfaces/src/dss/VatAbstract.sol";
 import { VowAbstract } from "lib/dss-interfaces/src/dss/VowAbstract.sol";
 
+import { GemPitAbstract  } from "lib/dss-interfaces/src/sai/GemPitAbstract.sol";
+import { DSTokenAbstract } from "lib/dss-interfaces/src/dapp/DSTokenAbstract.sol";
+
 import { PotHelper   } from "lib/dss-interfaces/src/dss/PotHelper.sol";
 
 contract Hevm {
@@ -25,15 +28,19 @@ contract HadaikenTest is DSTest {
     bytes20 constant CHEAT_CODE =
         bytes20(uint160(uint256(keccak256('hevm cheat code'))));
 
+    address constant internal PIT = address(0x69076e44a9C70a67D5b79d95795Aba299083c275);
+    address constant internal MKR = address(0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2);
     address constant internal JUG = address(0x19c0976f590D67707E62397C87829d896Dc0f1F1);
     address constant internal POT = address(0x197E90f9FAD81970bA7976f33CbD77088E5D7cf7);
     address constant internal VAT = address(0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B);
     address constant internal VOW = address(0xA950524441892A31ebddF91d3cEEFa04Bf454466);
 
-    JugAbstract constant internal jug  = JugAbstract(JUG);
-    PotAbstract constant internal pot  = PotAbstract(POT);
-    VowAbstract constant internal vow  = VowAbstract(VOW);
-    VatAbstract constant internal vat  = VatAbstract(VAT);
+    GemPitAbstract  constant internal pit  = GemPitAbstract(PIT);
+    DSTokenAbstract constant internal gem  = DSTokenAbstract(MKR);
+    JugAbstract     constant internal jug  = JugAbstract(JUG);
+    PotAbstract     constant internal pot  = PotAbstract(POT);
+    VowAbstract     constant internal vow  = VowAbstract(VOW);
+    VatAbstract     constant internal vat  = VatAbstract(VAT);
 
     function setUp() public {
         hadaiken = new Hadaiken();
@@ -110,9 +117,17 @@ contract HadaikenTest is DSTest {
         assertTrue(hadaiken.kickable());
     }
 
+    function testFinishHim() public {
+        uint256 pitBalance = gem.balanceOf(PIT);
+        assertTrue(pitBalance > 0);
+        uint256 amtBurned = hadaiken.finishhim();
+        assertEq(gem.balanceOf(PIT), 0);
+        assertEq(pitBalance, amtBurned);
+    }
+
     function testCCCComboBreaker() public {
         hevm.warp(now + 20 days);
-        assert(hadaiken.rawSysDebt() > 0);
+        assertTrue(hadaiken.rawSysDebt() > 0);
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
