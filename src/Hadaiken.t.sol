@@ -1,8 +1,10 @@
 pragma solidity ^0.5.11;
 
+// ../test-hadaiken.sh
+
 import "ds-test/test.sol";
 
-import "./Hadaiken.sol";
+import { Hadaiken } from "./Hadaiken.sol";
 
 import { JugAbstract } from "lib/dss-interfaces/src/dss/JugAbstract.sol";
 import { PotAbstract } from "lib/dss-interfaces/src/dss/PotAbstract.sol";
@@ -31,18 +33,39 @@ contract HadaikenTest is DSTest {
     PotAbstract constant internal pot  = PotAbstract(POT);
     VowAbstract constant internal vow  = VowAbstract(VOW);
     VatAbstract constant internal vat  = VatAbstract(VAT);
-    PotHelper   constant internal poth = PotHelper(POT);
+    PotHelper   constant internal poth = new PotHelper(POT);
 
     function setUp() public {
         hadaiken = new Hadaiken();
         hevm = Hevm(address(CHEAT_CODE));
+        hevm.warp(now);
     }
 
     function testHeal() public {
         hevm.warp(now + 2 days);
-        assertTrue(hadaiken.drip() > 0);
+        pot.drip();
+        jug.drip("ETH-A");
+        jug.drip("BAT-A");
+        assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
         hadaiken.heal();
-        assertTrue(hadaiken.drip() == 0);
+        assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
     }
 
+    function testHealWithoutDrip() public {
+        hevm.warp(now + 2 days);
+        assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
+        hadaiken.heal();
+        assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
+    }
+
+    function testRawSysDebt() public {
+        uint256 rsd = hadaiken.rawSysDebt();
+        assert(rsd > 0);
+        hevm.warp(now + 2 days);
+        assertEq(hadaiken.rawSysDebt(), rsd);
+        pot.drip();
+        assert(hadaiken.rawSysDebt() > rsd);
+        hadaiken.heal();
+        assertEq(hadaiken.rawSysDebt(), 0);
+    }
 }
