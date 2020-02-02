@@ -40,6 +40,15 @@ contract Hadaiken {
         return _rawSysDebt();
     }
 
+    function _sysSurplus() internal view returns (uint256) {
+        // require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
+        return (vat.sin(VOW) + vow.bump() + vow.hump());
+    }
+
+    function  sysSurplus() external view returns (uint256) {
+        return _sysSurplus();
+    }
+
     // Saves you money.
     function heal() external {
         _heal();
@@ -86,12 +95,13 @@ contract Hadaiken {
 
     // Can we bump an auction?
     function _bumppable() internal view returns (bool) {
-        return (vat.dai(VOW) > (vow.hump() + vow.bump()));
+        // require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
+        // require(sub(sub(vat.sin(address(this)), Sin), Ash) == 0, "Vow/debt-not-zero");
+        return ((vat.dai(VOW) >= _sysSurplus()) && (_rawSysDebt() == 0));
     }
 
     // Kick off an auction and return the auction ID
     function ccccombobreaker() external returns (uint256) {
-        _heal();
         return vow.flap();
     }
 
@@ -102,9 +112,9 @@ contract Hadaiken {
 
     // Kitchen sink. Call this early and often.
     function hadaiken() public {
-        _dripPot();                                // Update the chi
-        _dripIlks();                               // Updates the Ilk rates
-        _heal();                                   // Cancel out system debt with system surplus
-        if (_bumppable()) { _ccccombobreaker(); }  // Start an auction
+        _dripPot();                               // Update the chi
+        _dripIlks();                              // Updates the Ilk rates
+        _heal();                                  // Cancel out system debt with system surplus
+        if (_bumppable()) { _ccccombobreaker(); } // Start an auction
     }
 }

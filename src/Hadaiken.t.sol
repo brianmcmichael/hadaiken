@@ -50,6 +50,14 @@ contract HadaikenTest is DSTest {
         assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
     }
 
+    function testCanHealSuccessively() public {
+        assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
+        hadaiken.heal();
+        hadaiken.heal();
+        hadaiken.heal();
+        assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
+    }
+
     function testHealWithoutDrip() public {
         hevm.warp(now + 2 days);
         assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
@@ -73,6 +81,10 @@ contract HadaikenTest is DSTest {
         assertEq(hadaiken.rawSysDebt(), 0);
     }
 
+    function testSysSurplus() public {
+        assert(hadaiken.sysSurplus() > 0);
+    }
+
     function testBumppable() public {
         assertTrue(!hadaiken.bumppable());
         hevm.warp(now + 20 days);
@@ -84,11 +96,13 @@ contract HadaikenTest is DSTest {
     }
 
     function testCCCComboBreaker() public {
-        hevm.warp(now + 3 days);
+        hevm.warp(now + 20 days);
         assert(hadaiken.rawSysDebt() > 0);
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
+        hadaiken.heal();
+        assertTrue(hadaiken.bumppable());
         uint256 id = hadaiken.ccccombobreaker();
         assertEq(id, 0);
         assertEq(hadaiken.rawSysDebt(), 0);
