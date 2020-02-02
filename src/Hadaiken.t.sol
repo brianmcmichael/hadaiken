@@ -72,4 +72,32 @@ contract HadaikenTest is DSTest {
         hadaiken.heal();
         assertEq(hadaiken.rawSysDebt(), 0);
     }
+
+    function testBumppable() public {
+        assertTrue(!hadaiken.bumppable());
+        hevm.warp(now + 20 days);
+        pot.drip();
+        jug.drip("ETH-A");
+        jug.drip("BAT-A");
+        hadaiken.heal();
+        assertTrue(hadaiken.bumppable());
+    }
+
+    function testCCCComboBreaker() public {
+        hevm.warp(now + 3 days);
+        assert(hadaiken.rawSysDebt() > 0);
+        pot.drip();
+        jug.drip("ETH-A");
+        jug.drip("BAT-A");
+        uint256 id = hadaiken.ccccombobreaker();
+        assertEq(id, 0);
+        assertEq(hadaiken.rawSysDebt(), 0);
+    }
+
+    function testHadaiken() public {
+        hevm.warp(now + 20 days);
+        assert(hadaiken.rawSysDebt() > 0);
+        hadaiken.hadaiken();
+        assertEq(hadaiken.rawSysDebt(), 0);
+    }
 }

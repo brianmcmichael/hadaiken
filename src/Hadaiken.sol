@@ -57,8 +57,9 @@ contract Hadaiken {
     }
 
     // Return the new chi value after drip.
-    function drip() external returns (uint256) {
-        return pot.drip();
+    function drip() external returns (uint256 chi) {
+        chi = pot.drip();
+        _dripIlks();
     }
 
     // Returns a simulated chi value
@@ -70,25 +71,26 @@ contract Hadaiken {
         pot.drip();
     }
 
+    function dripIlks() external {
+        _dripIlks();
+    }
+
     function _dripIlks() internal {
         jug.drip(ETH_A);
         jug.drip(BAT_A);
     }
 
+    function bumppable() public view returns (bool) {
+        return _bumppable();
+    }
+
     // Can we bump an auction?
-    // sump: debt auction bid size, i.e. the fixed debt quantity to be covered by any one debt auction
-    // dump: debt auction lot size, i.e. the starting amount of MKR offered to cover the lot/sump
-    // bump: surplus auction lot size, i.e. the fixed surplus quantity to be sold by any one surplus
-    // hump: surplus buffer
-    // Call heal first or this will fail.
     function _bumppable() internal view returns (bool) {
-        // minSurplus = vow.hump() + vow.bump();
-        // sysSurplus = vat.dai(VOW) - vat.sin(VOW);
-        return (vow.hump() + vow.bump()) > (vat.dai(VOW) - vat.sin(VOW));
+        return (vat.dai(VOW) > (vow.hump() + vow.bump()));
     }
 
     // Kick off an auction and return the auction ID
-    function cccombobreaker() external returns (uint256) {
+    function ccccombobreaker() external returns (uint256) {
         _heal();
         return vow.flap();
     }
