@@ -27,9 +27,13 @@ contract Hadaiken {
     bytes32 constant internal BAT_A = bytes32("BAT-A");
 
     // Raw System Debt
-    function rawSysDebt() internal view returns (uint256) {
+    function _rawSysDebt() internal view returns (uint256) {
         // Not using safemath for gas efficiency and any side-effects are on MakerDao
-        return vat.dai(VOW) - vow.Sin() - vow.Ash();
+        return vat.sin(VOW) - vow.Sin() - vow.Ash();
+    }
+
+    function rawSysDebt() external view returns (uint256) {
+        return _rawSysDebt();
     }
 
     // Saves you money.
@@ -39,13 +43,13 @@ contract Hadaiken {
 
     // Returns the amount of debt healed if you're curious about that sort of thing.
     function healStat() external returns (uint256 sd) {
-        sd = rawSysDebt();
+        sd = _rawSysDebt();
         _heal();
     }
 
     // No return here. I want to save gas and who cares.
     function _heal() internal {
-        vow.heal(rawSysDebt());
+        vow.heal(_rawSysDebt());
     }
 
     // Return the new chi value after drip.
@@ -92,9 +96,9 @@ contract Hadaiken {
 
     // Kitchen sink. Call this early and often.
     function hadaiken() public {
-        _dripPot();                              // Update the chi
-        _dripIlks();                             // Updates the Ilk rates
-        _heal();                                 // Cancel out system debt with system surplus
+        _dripPot();                                // Update the chi
+        _dripIlks();                               // Updates the Ilk rates
+        _heal();                                   // Cancel out system debt with system surplus
         if (_bumppable()) { _ccccombobreaker(); }  // Start an auction
     }
 }
