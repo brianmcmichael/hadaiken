@@ -29,7 +29,7 @@ contract Hadaiken {
     // Raw System Debt
     function _rawSysDebt() internal view returns (uint256) {
         // Not using safemath for gas efficiency and any side-effects are on MakerDao
-        return vat.sin(VOW) - vow.Sin() - vow.Ash();
+        return (vat.sin(VOW) - vow.Sin() - vow.Ash());
     }
 
     function rawSysDebt() external view returns (uint256) {
