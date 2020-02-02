@@ -32,7 +32,6 @@ contract Hadaiken {
 
     // Raw System Debt
     function _rawSysDebt() internal view returns (uint256) {
-        // Not using safemath for gas efficiency and any side-effects are on MakerDao
         return (vat.sin(VOW) - vow.Sin() - vow.Ash());
     }
 
@@ -41,7 +40,6 @@ contract Hadaiken {
     }
 
     function _sysSurplus() internal view returns (uint256) {
-        // require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
         return (vat.sin(VOW) + vow.bump() + vow.hump());
     }
 

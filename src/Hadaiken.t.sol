@@ -65,6 +65,20 @@ contract HadaikenTest is DSTest {
         assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
     }
 
+    function testDrip() public {
+        uint256 chi = hadaiken.drip();
+        assertTrue(chi > 0);
+        hevm.warp(now + 2 days);
+        assertTrue(hadaiken.drip() > chi);
+    }
+
+    function testDrop() public {
+        hadaiken.drip();
+        hevm.warp(now + 2 days);
+        uint256 calcchi = hadaiken.drop();
+        assertEq(calcchi, hadaiken.drip());
+    }
+
     function testHealStat() public {
         uint256 debt = (vat.sin(VOW) - vow.Sin() - vow.Ash());
         assertEq(hadaiken.healStat(), debt);
@@ -104,7 +118,7 @@ contract HadaikenTest is DSTest {
         hadaiken.heal();
         assertTrue(hadaiken.bumppable());
         uint256 id = hadaiken.ccccombobreaker();
-        assertEq(id, 0);
+        assertEq(id, 1);
         assertEq(hadaiken.rawSysDebt(), 0);
     }
 
