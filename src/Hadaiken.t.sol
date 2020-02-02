@@ -100,14 +100,14 @@ contract HadaikenTest is DSTest {
         assert(hadaiken.sysSurplus() > 0);
     }
 
-    function testBumppable() public {
-        assertTrue(!hadaiken.bumppable());
+    function testKickable() public {
+        assertTrue(!hadaiken.kickable());
         hevm.warp(now + 20 days);
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
         hadaiken.heal();
-        assertTrue(hadaiken.bumppable());
+        assertTrue(hadaiken.kickable());
     }
 
     function testCCCComboBreaker() public {
@@ -117,7 +117,7 @@ contract HadaikenTest is DSTest {
         jug.drip("ETH-A");
         jug.drip("BAT-A");
         hadaiken.heal();
-        assertTrue(hadaiken.bumppable());
+        assertTrue(hadaiken.kickable());
         uint256 id = hadaiken.ccccombobreaker();
         assertEq(id, 1);
         assertEq(hadaiken.rawSysDebt(), 0);
