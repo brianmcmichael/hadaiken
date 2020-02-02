@@ -125,6 +125,16 @@ contract HadaikenTest is DSTest {
         assertEq(pitBalance, amtBurned);
     }
 
+    function testFinishHimDoesntRevert() public {
+        uint256 pitBalance = gem.balanceOf(PIT);
+        assertTrue(pitBalance > 0);
+        uint256 amtBurned = hadaiken.finishhim();
+        hadaiken.finishhim();
+        hadaiken.finishhim();
+        assertEq(gem.balanceOf(PIT), 0);
+        assertEq(pitBalance, amtBurned);
+    }
+
     function testCCCComboBreaker() public {
         hevm.warp(now + 20 days);
         assertTrue(hadaiken.rawSysDebt() > 0);
