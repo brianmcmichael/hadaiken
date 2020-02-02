@@ -87,12 +87,12 @@ contract Hadaiken {
         jug.drip(BAT_A);
     }
 
-    function bumppable() external view returns (bool) {
-        return _bumppable();
+    function kickable() external view returns (bool) {
+        return _kickable();
     }
 
     // Can we bump an auction?
-    function _bumppable() internal view returns (bool) {
+    function _kickable() internal view returns (bool) {
         // require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
         // require(sub(sub(vat.sin(address(this)), Sin), Ash) == 0, "Vow/debt-not-zero");
         return ((vat.dai(VOW) >= _sysSurplus()) && (_rawSysDebt() == 0));
@@ -113,6 +113,6 @@ contract Hadaiken {
         _dripPot();                               // Update the chi
         _dripIlks();                              // Updates the Ilk rates
         _heal();                                  // Cancel out system debt with system surplus
-        if (_bumppable()) { _ccccombobreaker(); } // Start an auction
+        if (_kickable()) { _ccccombobreaker(); }  // Start an auction
     }
 }
