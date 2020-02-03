@@ -1,5 +1,7 @@
 # Ha-dai-ken!
 
+![Hadaiken](hadaiken.png)
+
 One-call transaction to perform a bunch of housekeeping in the MakerDAO ecosystem.
 
   * Heal system debt and surplus
