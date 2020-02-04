@@ -103,8 +103,8 @@ contract HadaikenTest is DSTest {
         assertEq(hadaiken.rawSysDebt(), 0);
     }
 
-    function testSysSurplus() public {
-        assert(hadaiken.sysSurplus() > 0);
+    function testSysSurplusThreshold() public {
+        assert(hadaiken.sysSurplusThreshold() > 0);
     }
 
     function testKickable() public {
