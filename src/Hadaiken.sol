@@ -101,9 +101,10 @@ contract Hadaiken {
 
     // Can we bump an auction?
     function _kickable() internal view returns (bool) {
+        // Assume heal is called prior to kick.
         // require(vat.dai(address(this)) >= add(add(vat.sin(address(this)), bump), hump), "Vow/insufficient-surplus");
         // require(sub(sub(vat.sin(address(this)), Sin), Ash) == 0, "Vow/debt-not-zero");
-        return ((vat.dai(VOW) >= _sysSurplus()) && (_rawSysDebt() == 0));
+        return (vat.dai(VOW) >= _sysSurplus());
     }
 
     // Burn all of the MKR in the Sai Pit
@@ -118,6 +119,7 @@ contract Hadaiken {
 
     // Kick off an auction and return the auction ID
     function ccccombobreaker() external returns (uint256) {
+        _heal();  // Flap requires debt == 0
         return vow.flap();
     }
 
