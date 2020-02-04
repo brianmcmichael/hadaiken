@@ -1,4 +1,4 @@
 all    :; dapp build
 clean  :; dapp clean
-test   :; dapp test
+test   :; ./test-hadaiken.sh
 deploy :; dapp create Hadaiken
