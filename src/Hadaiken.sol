@@ -4,6 +4,7 @@ import { JugAbstract } from "lib/dss-interfaces/src/dss/JugAbstract.sol";
 import { PotAbstract } from "lib/dss-interfaces/src/dss/PotAbstract.sol";
 import { VatAbstract } from "lib/dss-interfaces/src/dss/VatAbstract.sol";
 import { VowAbstract } from "lib/dss-interfaces/src/dss/VowAbstract.sol";
+import { OsmAbstract } from "lib/dss-interfaces/src/dss/OsmAbstract.sol";
 
 import { GemPitAbstract  } from "lib/dss-interfaces/src/sai/GemPitAbstract.sol";
 import { DSTokenAbstract } from "lib/dss-interfaces/src/dapp/DSTokenAbstract.sol";
@@ -23,16 +24,21 @@ contract Hadaiken {
     address constant internal VAT = address(0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B);
     address constant internal VOW = address(0xA950524441892A31ebddF91d3cEEFa04Bf454466);
 
-    GemPitAbstract  constant internal pit  = GemPitAbstract(PIT);
-    DSTokenAbstract constant internal gem  = DSTokenAbstract(MKR);
-    JugAbstract     constant internal jug  = JugAbstract(JUG);
-    PotAbstract     constant internal pot  = PotAbstract(POT);
-    VowAbstract     constant internal vow  = VowAbstract(VOW);
-    VatAbstract     constant internal vat  = VatAbstract(VAT);
+    address constant internal PIP_ETH = address(0x81FE72B5A8d1A857d176C3E7d5Bd2679A9B85763);
+    address constant internal PIP_BAT = address(0xB4eb54AF9Cc7882DF0121d26c5b97E802915ABe6);
+
+    GemPitAbstract  constant internal pit    = GemPitAbstract(PIT);
+    DSTokenAbstract constant internal gem    = DSTokenAbstract(MKR);
+    JugAbstract     constant internal jug    = JugAbstract(JUG);
+    PotAbstract     constant internal pot    = PotAbstract(POT);
+    VowAbstract     constant internal vow    = VowAbstract(VOW);
+    VatAbstract     constant internal vat    = VatAbstract(VAT);
+    OsmAbstract     constant internal osmeth = OsmAbstract(PIP_ETH);
+    OsmAbstract     constant internal osmbat = OsmAbstract(PIP_BAT);
     PotHelper                internal poth;
 
-    bytes32 constant internal ETH_A = bytes32("ETH-A");
-    bytes32 constant internal BAT_A = bytes32("BAT-A");
+    bytes32 constant internal ETH_A  = bytes32("ETH-A");
+    bytes32 constant internal BAT_A  = bytes32("BAT-A");
     bytes32 constant internal USDC_A = bytes32("USDC-A");
 
     constructor() public {
@@ -130,8 +136,26 @@ contract Hadaiken {
         vow.flap();
     }
 
+    function _pokeETH() internal {
+        if (osmeth.pass()) { osmeth.poke(); }
+    }
+
+    function _pokeBAT() internal {
+        if (osmbat.pass()) { osmbat.poke(); }
+    }
+
+    function _pokeThings() internal {
+        _pokeETH();
+        _pokeBAT();
+    }
+
+    function hundredHandSlap() external {
+        _pokeThings();
+    }
+
     // Kitchen sink. Call this early and often.
     function hadaiken() external {
+        _pokeThings();                            // Update oracle prices
         _dripPot();                               // Update the chi
         _dripIlks();                              // Updates the Ilk rates
         _heal();                                  // Cancel out system debt with system surplus
