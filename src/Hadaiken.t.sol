@@ -53,6 +53,7 @@ contract HadaikenTest is DSTest {
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
+        jug.drip("USDC-A");
         assert((vat.sin(VOW) - vow.Sin() - vow.Ash()) > 0);
         hadaiken.heal();
         assertEq((vat.sin(VOW) - vow.Sin() - vow.Ash()), 0);
@@ -113,6 +114,7 @@ contract HadaikenTest is DSTest {
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
+        jug.drip("USDC-A");
         hadaiken.heal();
         assertTrue(hadaiken.kickable());
     }
@@ -141,6 +143,7 @@ contract HadaikenTest is DSTest {
         pot.drip();
         jug.drip("ETH-A");
         jug.drip("BAT-A");
+        jug.drip("USDC-A");
         hadaiken.heal();
         assertTrue(hadaiken.kickable());
         uint256 id = hadaiken.ccccombobreaker();
