@@ -10,6 +10,7 @@ import { JugAbstract } from "lib/dss-interfaces/src/dss/JugAbstract.sol";
 import { PotAbstract } from "lib/dss-interfaces/src/dss/PotAbstract.sol";
 import { VatAbstract } from "lib/dss-interfaces/src/dss/VatAbstract.sol";
 import { VowAbstract } from "lib/dss-interfaces/src/dss/VowAbstract.sol";
+import { OsmAbstract } from "lib/dss-interfaces/src/dss/OsmAbstract.sol";
 
 import { GemPitAbstract  } from "lib/dss-interfaces/src/sai/GemPitAbstract.sol";
 import { DSTokenAbstract } from "lib/dss-interfaces/src/dapp/DSTokenAbstract.sol";
@@ -35,12 +36,17 @@ contract HadaikenTest is DSTest {
     address constant internal VAT = address(0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B);
     address constant internal VOW = address(0xA950524441892A31ebddF91d3cEEFa04Bf454466);
 
+    address constant internal PIP_ETH = address(0x81FE72B5A8d1A857d176C3E7d5Bd2679A9B85763);
+    address constant internal PIP_BAT = address(0xB4eb54AF9Cc7882DF0121d26c5b97E802915ABe6);
+
     GemPitAbstract  constant internal pit  = GemPitAbstract(PIT);
     DSTokenAbstract constant internal gem  = DSTokenAbstract(MKR);
     JugAbstract     constant internal jug  = JugAbstract(JUG);
     PotAbstract     constant internal pot  = PotAbstract(POT);
     VowAbstract     constant internal vow  = VowAbstract(VOW);
     VatAbstract     constant internal vat  = VatAbstract(VAT);
+    OsmAbstract     constant internal osmeth = OsmAbstract(PIP_ETH);
+    OsmAbstract     constant internal osmbat = OsmAbstract(PIP_BAT);
 
     function setUp() public {
         hadaiken = new Hadaiken();
@@ -149,6 +155,13 @@ contract HadaikenTest is DSTest {
         uint256 id = hadaiken.ccccombobreaker();
         assertEq(id, 1);
         assertEq(hadaiken.rawSysDebt(), 0);
+    }
+
+    function testPokes() public {
+        hevm.warp(now + 2 hours);
+        assert(osmeth.pass());
+        hadaiken.hundredHandSlap();
+        assert(!osmeth.pass());
     }
 
     function testHadaiken() public {
