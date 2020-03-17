@@ -6,6 +6,7 @@ One-call transaction to perform a bunch of housekeeping in the MakerDAO ecosyste
 
   * Heal system debt and surplus
   * Drip the pot and jugs
+  * Update oracle prices
   * Kick off a flap auction if one is ready
 
 ## Usage
