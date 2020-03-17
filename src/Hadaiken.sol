@@ -33,6 +33,7 @@ contract Hadaiken {
 
     bytes32 constant internal ETH_A = bytes32("ETH-A");
     bytes32 constant internal BAT_A = bytes32("BAT-A");
+    bytes32 constant internal USDC_A = bytes32("USDC-A");
 
     constructor() public {
         poth = new PotHelper(POT);
@@ -93,6 +94,7 @@ contract Hadaiken {
     function _dripIlks() internal {
         jug.drip(ETH_A);
         jug.drip(BAT_A);
+        jug.drip(USDC_A);
     }
 
     function kickable() external view returns (bool) {
