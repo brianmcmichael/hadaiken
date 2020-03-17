@@ -149,6 +149,7 @@ contract Hadaiken {
         _pokeBAT();
     }
 
+    // Poke the oracles
     function hundredHandSlap() external {
         _pokeThings();
     }
