@@ -14,12 +14,12 @@ One-call transaction to perform a bunch of housekeeping in the MakerDAO ecosyste
 Using [dapptools](https://dapp.tools/):
 
 ```
-seth send 0xDA10000037344851f78fDB59B0C0Ca36665F7507 "hadaiken()"
+seth send 0xdA10000017D34559DEC49a625aA5d9B66bCeB106 "hadaiken()"
 ```
 
 Via Metamask and Etherscan:
 
-  * https://etherscan.io/address/0xDA10000037344851f78fDB59B0C0Ca36665F7507#code
+  * https://etherscan.io/address/0xdA10000017D34559DEC49a625aA5d9B66bCeB106#code
 
 ## Contributions
 
